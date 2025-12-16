@@ -29,14 +29,43 @@
 
 ## Установка
 
-### Требования
+### Вариант 1: Docker (Рекомендуется)
+
+Самый простой способ запустить приложение - использовать Docker:
+
+1. Перейдите в директорию docker:
+```bash
+cd docker
+```
+
+2. Запустите сервисы:
+```bash
+make up
+# или
+docker-compose up -d
+```
+
+3. Загрузите модели Ollama:
+```bash
+make setup-models
+# или
+./setup-ollama-models.sh
+```
+
+4. Откройте приложение: http://localhost:8501
+
+Подробнее см. [docker/README.md](docker/README.md) и [docker/QUICKSTART.md](docker/QUICKSTART.md)
+
+### Вариант 2: Локальная установка
+
+#### Требования
 
 - Python 3.9+
 - Ollama с установленными моделями:
   - `t-pro-it-1.0-q8_0.gguf:latest` (для анализа)
   - `qwen3-coder:latest` (для генерации кода)
 
-### Шаги установки
+#### Шаги установки
 
 1. Клонируйте репозиторий:
 ```bash
@@ -68,6 +97,16 @@ ollama serve
 
 ## Использование
 
+### С Docker
+
+```bash
+cd docker
+make up
+# Приложение доступно на http://localhost:8501
+```
+
+### Локально
+
 Запустите приложение:
 ```bash
 streamlit run src/ui/main.py
@@ -89,6 +128,12 @@ AI-datascientist/
 │   ├── data/               # Обработка данных
 │   └── utils/              # Утилиты
 ├── config/                 # Конфигурация
+├── docker/                 # Docker конфигурация
+│   ├── Dockerfile          # Production образ
+│   ├── Dockerfile.dev      # Development образ
+│   ├── docker-compose.yml  # Production конфигурация
+│   ├── docker-compose.dev.yml  # Development конфигурация
+│   └── setup-ollama-models.sh  # Скрипт загрузки моделей
 ├── tests/                  # Тесты
 ├── docs/                   # Документация
 ├── requirements.txt        # Зависимости
@@ -106,9 +151,23 @@ AI-datascientist/
 
 ### Тестирование
 
+Запуск всех unit тестов:
 ```bash
-pytest tests/
+pytest tests/unit/ -v
 ```
+
+Запуск с покрытием кода:
+```bash
+pytest tests/unit/ --cov=src --cov-report=html
+```
+
+Или используйте скрипт:
+```bash
+./scripts/run_tests.sh
+./scripts/run_tests.sh --coverage
+```
+
+Подробнее см. [tests/README.md](tests/README.md)
 
 ### Форматирование кода
 

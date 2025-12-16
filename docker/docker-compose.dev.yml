@@ -1,0 +1,50 @@
+# Docker Compose для разработки с hot-reload
+version: '3.8'
+
+services:
+  # Ollama сервис
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ai-datascientist-ollama-dev
+    volumes:
+      - ollama_data:/root/.ollama
+    ports:
+      - "11434:11434"
+    environment:
+      - OLLAMA_HOST=0.0.0.0
+    restart: unless-stopped
+
+  # Приложение в режиме разработки
+  app:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.dev
+    container_name: ai-datascientist-app-dev
+    ports:
+      - "8501:8501"
+    volumes:
+      - ../src:/app/src
+      - ../config:/app/config
+      - ../outputs:/app/outputs
+      - ../data:/app/data
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - OLLAMA_MODEL_ANALYST=t-pro-it-1.0-q8_0.gguf:latest
+      - OLLAMA_MODEL_CODER=qwen3-coder:latest
+      - OLLAMA_TEMPERATURE_ANALYST=0.55
+      - OLLAMA_TEMPERATURE_CODER=0.2
+      - LOG_LEVEL=DEBUG
+      - OUTPUT_DIR=/app/outputs
+    depends_on:
+      - ollama
+    restart: unless-stopped
+    command: streamlit run src/ui/main.py --server.port=8501 --server.address=0.0.0.0 --server.runOnSave=true
+
+volumes:
+  ollama_data:
+    driver: local
+
+networks:
+  default:
+    name: ai-datascientist-network-dev
+

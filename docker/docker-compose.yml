@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  # Ollama сервис для LLM моделей
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ai-datascientist-ollama
+    volumes:
+      - ollama_data:/root/.ollama
+    ports:
+      - "11434:11434"
+    environment:
+      - OLLAMA_HOST=0.0.0.0
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # AI Data Scientist приложение
+  app:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: ai-datascientist-app
+    ports:
+      - "8501:8501"
+    volumes:
+      - ../outputs:/app/outputs
+      - ../data:/app/data  # Опционально: для монтирования данных
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - OLLAMA_MODEL_ANALYST=t-pro-it-1.0-q8_0.gguf:latest
+      - OLLAMA_MODEL_CODER=qwen3-coder:latest
+      - OLLAMA_TEMPERATURE_ANALYST=0.55
+      - OLLAMA_TEMPERATURE_CODER=0.2
+      - LOG_LEVEL=INFO
+      - OUTPUT_DIR=/app/outputs
+    depends_on:
+      ollama:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  ollama_data:
+    driver: local
+
+networks:
+  default:
+    name: ai-datascientist-network
+
