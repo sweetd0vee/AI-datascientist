@@ -11,7 +11,7 @@ PROJECT_ROOT = BASE_DIR
 
 # Настройки LLM
 OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
-OLLAMA_MODEL_ANALYST = os.getenv("OLLAMA_MODEL_ANALYST", "t-pro-it-1.0-q8_0.gguf:latest")
+OLLAMA_MODEL_ANALYST = os.getenv("OLLAMA_MODEL_ANALYST", "llama2:latest")
 OLLAMA_MODEL_CODER = os.getenv("OLLAMA_MODEL_CODER", "qwen3-coder:latest")
 OLLAMA_TEMPERATURE_ANALYST = float(os.getenv("OLLAMA_TEMPERATURE_ANALYST", "0.55"))
 OLLAMA_TEMPERATURE_CODER = float(os.getenv("OLLAMA_TEMPERATURE_CODER", "0.2"))

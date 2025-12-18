@@ -1,5 +1,3 @@
-# Makefile для удобной работы с Docker
-
 .PHONY: help build up down restart logs shell-app shell-ollama setup-models clean
 
 help: ## Показать справку
