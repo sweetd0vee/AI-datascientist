@@ -40,4 +40,3 @@ ALLOWED_IMPORTS = ["pandas", "numpy", "matplotlib", "seaborn", "scipy"]
 DEFAULT_NUM_PLOTS = 30
 PLOT_FORMAT = "png"
 PLOT_DPI = 100
-
