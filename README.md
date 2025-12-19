@@ -25,7 +25,7 @@
 - **Utils Layer** (`src/utils/`) - вспомогательные утилиты
 - **Config Layer** (`config/`) - конфигурация приложения
 
-Подробное описание архитектуры см. в [ARCHITECTURE.md](ARCHITECTURE.md)
+Подробное описание архитектуры см. в [ARCHITECTURE.md](docs/ARCHITECTURE.md)
 
 ## Установка
 
